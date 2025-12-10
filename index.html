@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShoeHub - Premium Shoe Store</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            background: #ffffff;
+            color: #333333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            color: white;
+            padding: 50px 0;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        
+        header h1 {
+            font-size: 3.5em;
+            font-weight: 800;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            color: white;
+        }
+        
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 1;
+            color: white;
+        }
+        
+        .category-filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            padding: 30px 20px;
+            flex-wrap: wrap;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            border-bottom: 3px solid #ff6b6b;
+        }
+        
+        .category-btn {
+            padding: 14px 32px;
+            border: 2px solid white;
+            background-color: transparent;
+            color: white;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .category-btn:hover {
+            background-color: white;
+            color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .category-btn.active {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
+            color: white;
+            border-color: #ff6b6b;
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2em;
+            font-weight: 600;
+            margin-bottom: 40px;
+            color: #1a1a1a;
+            background: none;
+            -webkit-background-clip: unset;
+            -webkit-text-fill-color: unset;
+            background-clip: unset;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+            border: 1px solid #e5e5e5;
+        }
+        
+        .product-card::before {
+            display: none;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            background: #f5f5f5;
+            display: block;
+            transition: transform 0.2s ease;
+        }
+        
+        .product-card:hover .product-image {
+            transform: scale(1.02);
+        }
+        
+        .product-info {
+            padding: 24px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+        
+        .product-category {
+            display: inline-block;
+            background: #f0f0f0;
+            color: #666666;
+            padding: 6px 12px;
+            border-radius: 2px;
+            font-size: 0.7em;
+            font-weight: 600;
+            margin-bottom: 12px;
+            width: fit-content;
+            text-transform: capitalize;
+            letter-spacing: 0px;
+            box-shadow: none;
+        }
+        
+        .product-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+            line-height: 1.3;
+        }
+        
+        .product-description {
+            font-size: 0.9em;
+            color: #888888;
+            margin-bottom: 16px;
+            flex-grow: 1;
+            line-height: 1.6;
+        }
+        
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding-top: 16px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .product-price {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #1a1a1a;
+            background: none;
+            -webkit-background-clip: unset;
+            -webkit-text-fill-color: unset;
+            background-clip: unset;
+        }
+        
+        .add-to-cart {
+            flex: 1;
+            padding: 10px 16px;
+            background: #000000;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            letter-spacing: 0px;
+            text-transform: capitalize;
+        }
+        
+        .add-to-cart:hover {
+            background: #333333;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .add-to-cart:active {
+            transform: scale(0.98);
+        }
+        
+        footer {
+            background: #f9f9f9;
+            color: #666666;
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 60px;
+            font-size: 0.9em;
+            border-top: 1px solid #e5e5e5;
+        }
+        
+        footer p {
+            letter-spacing: 0px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>👟 ShoeHub</h1>
+        <p>Your Premier Destination for Quality Shoes</p>
+    </header>
+    
+    
+    <div class="category-filter-buttons">
+        <button class="category-btn active" onclick="filterCategory('all')">All Shoes</button>
+        <button class="category-btn" onclick="filterCategory('casual')">Casual</button>
+        <button class="category-btn" onclick="filterCategory('running')">Running</button>
+        <button class="category-btn" onclick="filterCategory('formal')">Formal</button>
+        <button class="category-btn" onclick="filterCategory('sports')">Sports</button>
+    </div>
+    
+    <div class="container">
+        <div class="section-title">Our Premium Collection</div>
+        <div class="products-grid" id="productsGrid">
+            <!-- Products will be loaded here -->
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 ShoeHub. All rights reserved. | Crafted with ❤️ for shoe lovers worldwide</p>
+    </footer>
+    
+    <script>
+        const products = [
+            {
+                id: 1,
+                name: "Classic Running Shoes",
+                image: "/images/Shoe 1.jfif?v=" + Date.now(),
+                price: 89.99,
+                description: "Lightweight and comfortable shoes perfect for daily runs.",
+                category: "running"
+            },
+            {
+                id: 2,
+                name: "Urban Casual Sneakers",
+                image: "/images/Shoe 2.jfif?v=" + Date.now(),
+                price: 79.99,
+                description: "Stylish sneakers ideal for casual everyday wear.",
+                category: "casual"
+            },
+            {
+                id: 3,
+                name: "Professional Formal Shoes",
+                image: "/images/Shoe 3.jfif?v=" + Date.now(),
+                price: 129.99,
+                description: "Elegant formal shoes for business and special occasions.",
+                category: "formal"
+            },
+            {
+                id: 4,
+                name: "Athletic Sports Shoes",
+                image: "/images/Shoe 4.jfif?v=" + Date.now(),
+                price: 119.99,
+                description: "High-performance shoes designed for intense sports activities.",
+                category: "sports"
+            },
+            {
+                id: 5,
+                name: "Comfort Walking Shoes",
+                image: "/images/Shoe 6.avif?v=" + Date.now(),
+                price: 74.99,
+                description: "Ergonomic design for all-day comfort and support.",
+                category: "casual"
+            },
+            {
+                id: 6,
+                name: "Marathon Running Shoes",
+                image: "/images/Shoe 7.avif?v=" + Date.now(),
+                price: 139.99,
+                description: "Advanced cushioning for long-distance running performance.",
+                category: "running"
+            },
+            {
+                id: 7,
+                name: "Casual Slip-On Shoes",
+                image: "/images/Shoe 8.avif?v=" + Date.now(),
+                price: 59.99,
+                description: "Easy-to-wear slip-on shoes for quick and convenient styling.",
+                category: "casual"
+            }
+        ];
+        
+        let currentCategory = 'all';
+        
+        function renderProducts(category = 'all') {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+            
+            const filtered = category === 'all' 
+                ? products 
+                : products.filter(p => p.category === category);
+            
+            filtered.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22280%22 height=%22250%22%3E%3Crect fill=%22%23ddd%22 width=%22280%22 height=%22250%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 fill=%22%23999%22 text-anchor=%22middle%22 dy=%22.3em%22%3EImage not available%3C/text%3E%3C/svg%3E'">
+                    <div class="product-info">
+                        <div class="product-category">${product.category.charAt(0).toUpperCase() + product.category.slice(1)}</div>
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-description">${product.description}</div>
+                        <div class="product-footer">
+                            <div class="product-price">$${product.price.toFixed(2)}</div>
+                            <button class="add-to-cart" onclick="addToCart(${product.id})">Add</button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+        
+        function filterCategory(category) {
+            currentCategory = category;
+            
+            // Update active button
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            renderProducts(category);
+        }
+        
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            alert(`${product.name} added to cart!`);
+        }
+        
+        // Load products on page load
+        renderProducts();
+    </script>
+</body>
+</html>
